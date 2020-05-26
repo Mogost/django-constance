@@ -132,9 +132,8 @@ class TestAdmin(TestCase):
         })
         request.user = self.superuser
         request._dont_enforce_csrf_checks = True
-        with mock.patch("constance.admin.ConstanceForm.save"):
-            with mock.patch("django.contrib.messages.add_message"):
-                response = self.options.changelist_view(request, {})
+        with mock.patch("django.contrib.messages.add_message"):
+            response = self.options.changelist_view(request, {})
         self.assertIsInstance(response, HttpResponseRedirect)
         self.assertEqual(constance_config.LINEBREAK_VALUE, 'Hello\nWorld')
 
