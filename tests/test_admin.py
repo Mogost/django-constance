@@ -118,8 +118,11 @@ class TestAdmin(TestCase):
                 response = self.options.changelist_view(request, {})
         self.assertIsInstance(response, HttpResponseRedirect)
 
+    @mock.patch('constance.settings.CONFIG_FIELDSETS', {
+        'FieldSetOne': ('LINEBREAK_VALUE',)
+    })
     @mock.patch('constance.settings.CONFIG', {
-        'LINEBREAK_VALUE': ('Hello\nWorld', 'Value with new lines'),
+        'LINEBREAK_VALUE': ('Spam\nSpam', 'eggs\neggs'),
     })
     @mock.patch('constance.settings.IGNORE_ADMIN_VERSION_CHECK', True)
     def test_newlines_normalization(self):

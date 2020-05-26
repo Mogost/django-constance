@@ -69,7 +69,7 @@ CONSTANCE_CONFIG = {
     'TIME_VALUE': (time(23, 59, 59), 'And happy New Year'),
     'TIMEDELTA_VALUE': (timedelta(days=1, hours=2, minutes=3), 'Interval'),
     'CHOICE_VALUE': ('yes', 'select yes or no', 'yes_no_null_select'),
-    'LINEBREAK_VALUE': ('Spam spam', 'eggs\neggs'),
+    'LINEBREAK_VALUE': ('Spam\nspam', 'eggs\neggs'),
     'EMAIL_VALUE': ('test@example.com', 'An email', 'email'),
 }
 

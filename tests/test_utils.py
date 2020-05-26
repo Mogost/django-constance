@@ -26,7 +26,7 @@ class UtilsTestCase(TestCase):
             'TIME_VALUE': datetime.time(23, 59, 59),
             'DATE_VALUE': datetime.date(2010, 12, 24),
             'TIMEDELTA_VALUE': datetime.timedelta(days=1, hours=2, minutes=3),
-            'LINEBREAK_VALUE': 'Spam spam',
+            'LINEBREAK_VALUE': 'Spam\nspam',
             'DECIMAL_VALUE': Decimal('0.1'),
             'STRING_VALUE': 'Hello world',
             'DATETIME_VALUE': datetime.datetime(2010, 8, 23, 11, 29, 24),
