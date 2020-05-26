@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect
 from django.template.defaultfilters import linebreaksbr
 from django.test import TestCase, RequestFactory
 
+from constance import config as constance_config
 from constance import settings
 from constance.admin import Config
 
@@ -116,6 +117,25 @@ class TestAdmin(TestCase):
             with mock.patch("django.contrib.messages.add_message"):
                 response = self.options.changelist_view(request, {})
         self.assertIsInstance(response, HttpResponseRedirect)
+
+    @mock.patch('constance.settings.CONFIG', {
+        'LINEBREAK_VALUE': ('Hello\nWorld', 'Value with new lines'),
+    })
+    @mock.patch('constance.settings.IGNORE_ADMIN_VERSION_CHECK', True)
+    def test_newlines_normalization(self):
+        self.assertEqual(constance_config.LINEBREAK_VALUE, 'Hello\nWorld')
+        self.client.login(username='admin', password='nimda')
+        request = self.rf.post('/admin/constance/config/', data={
+            "LINEBREAK_VALUE": "Hello\r\nWorld",
+            "version": "123",
+        })
+        request.user = self.superuser
+        request._dont_enforce_csrf_checks = True
+        with mock.patch("constance.admin.ConstanceForm.save"):
+            with mock.patch("django.contrib.messages.add_message"):
+                response = self.options.changelist_view(request, {})
+        self.assertIsInstance(response, HttpResponseRedirect)
+        self.assertEqual(constance_config.LINEBREAK_VALUE, 'Hello\nWorld')
 
     @mock.patch('constance.settings.CONFIG', {
         'DATETIME_VALUE': (datetime(2019, 8, 7, 18, 40, 0), 'some naive datetime'),
