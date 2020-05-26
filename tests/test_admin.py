@@ -128,6 +128,7 @@ class TestAdmin(TestCase):
         request = self.rf.post('/admin/constance/config/', data={
             "LINEBREAK_VALUE": "Hello\r\nWorld",
             "version": "123",
+            "_save": "Save"
         })
         request.user = self.superuser
         request._dont_enforce_csrf_checks = True
