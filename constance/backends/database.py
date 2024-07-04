@@ -100,7 +100,7 @@ class DatabaseBackend(Backend):
         except self._model.DoesNotExist:
             try:
                 with transaction.atomic(using=queryset.db):
-                    queryset.create(key=key, value=value)
+                    queryset.create(key=key, value=value, json_value=value)
                 created = True
             except IntegrityError:
                 # Allow concurrent writes
@@ -109,6 +109,7 @@ class DatabaseBackend(Backend):
         if not created:
             old_value = constance.value
             constance.value = value
+            constance.value_json = value
             constance.save()
         else:
             old_value = None
