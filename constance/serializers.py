@@ -12,7 +12,7 @@ from datetime import time
 from datetime import timedelta
 from decimal import Decimal
 from typing import Any
-from typing import Callable
+from typing import Protocol
 from typing import TypeVar
 
 logger = logging.getLogger(__name__)
@@ -63,16 +63,22 @@ def object_hook(o: dict) -> Any:
         raise
 
 
-DecoderT = EncoderT = Callable[[Any], Any]
 T = TypeVar('T')
-EncodedT = TypeVar('EncodedT')
+
+
+class Encoder(Protocol[T]):
+    def __call__(self, value: T, /) -> str: ...
+
+
+class Decoder(Protocol[T]):
+    def __call__(self, value: str, /) -> T: ...
 
 
 def register_type(
     t: type[T],
     marker: str,
-    encoder: Callable[[T], EncodedT],
-    decoder: Callable[[EncodedT], T] = lambda d: d,
+    encoder: Encoder[T],
+    decoder: Decoder[T],
 ):
     if not marker:
         raise ValueError('Marker must be specified')
@@ -82,8 +88,8 @@ def register_type(
     _decoders[marker] = decoder
 
 
-_encoders: dict[type, tuple[str | None, EncoderT]] = {}
-_decoders: dict[str, DecoderT] = {}
+_encoders: dict[type, tuple[str, Encoder]] = {}
+_decoders: dict[str, Decoder] = {}
 
 
 def _register_default_types():
